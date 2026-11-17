@@ -1,0 +1,131 @@
+﻿
+@model List<TKD_BECUOI.Models.CartItem>
+
+@{
+    ViewBag.Title = "Giỏ hàng";
+    decimal tongTien = 0;
+}
+
+<div class="container" style="margin-top:30px; min-height:500px;">
+
+    <h2>GIỎ HÀNG CỦA BẠN</h2>
+    <hr />
+
+    @if (TempData["ThongBao"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["ThongBao"]
+        </div>
+    }
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="alert alert-warning text-center">
+            Giỏ hàng của bạn đang trống.
+
+            <br /><br />
+
+            <a href="@Url.Action("Index", "Home")"
+               class="btn btn-primary">
+                Tiếp tục mua sắm
+            </a>
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    decimal thanhTien =
+                        item.ProductPrice * item.Quantity;
+
+                    tongTien += thanhTien;
+
+                    <tr>
+                        <td>
+                            <img src="@item.ProductImage"
+                                 style="width:70px;height:70px;object-fit:contain;" />
+
+                            @item.ProductName
+                        </td>
+
+                        <td>
+                            @String.Format("{0:N0} ₫", item.ProductPrice)
+                        </td>
+
+                        <td>
+                            @using (Html.BeginForm("Update", "Cart",
+                                FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="productID"
+                                       value="@item.ProductID" />
+
+                                <input type="number"
+                                       name="quantity"
+                                       value="@item.Quantity"
+                                       min="1"
+                                       style="width:70px;" />
+
+                                <button type="submit"
+                                        class="btn btn-primary btn-sm">
+                                    Cập nhật
+                                </button>
+                            }
+                        </td>
+
+                        <td>
+                            @String.Format("{0:N0} ₫", thanhTien)
+                        </td>
+
+                        <td>
+                            @using (Html.BeginForm("Remove", "Cart",
+                                FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="productID"
+                                       value="@item.ProductID" />
+
+                                <button type="submit"
+                                        class="btn btn-danger btn-sm">
+                                    Xóa
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3 class="text-danger text-right">
+            Tổng tiền: @String.Format("{0:N0} ₫", tongTien)
+        </h3>
+
+        <div class="text-right">
+            <a href="@Url.Action("Index", "Home")"
+               class="btn btn-default">
+                Tiếp tục mua sắm
+            </a>
+            <a href="@Url.Action("Checkout", "Cart")"
+               class="btn btn-success btn-lg">
+                TIẾN HÀNH ĐẶT HÀNG
+            </a>
+        </div>
+
+    }
+</div>

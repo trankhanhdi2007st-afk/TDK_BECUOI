@@ -1,0 +1,420 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Admin KTBECK</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --bg-main: #0b0b12;
+            --bg-card: #151521;
+            --bg-menu: #11111b;
+            --primary: #a855f7;
+            --primary-light: #c084fc;
+            --text-main: #f5f3ff;
+            --text-muted: #9996b5;
+            --border: rgba(168, 85, 247, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background:
+                radial-gradient(
+                    circle at 10% 0%,
+                    rgba(126, 34, 206, 0.13),
+                    transparent 35%
+                ),
+                var(--bg-main);
+            color: var(--text-main);
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            font-size: 15px;
+        }
+
+        /* HEADER */
+        .admin-header {
+            background: rgba(17, 17, 27, 0.96);
+            color: white;
+            padding: 24px 40px;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 8px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-header::after {
+            content: "";
+            position: absolute;
+            right: 8%;
+            top: -90px;
+            width: 240px;
+            height: 180px;
+            background: rgba(168, 85, 247, 0.12);
+            filter: blur(65px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .admin-header h3 {
+            margin: 0;
+            display: inline-block;
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            background: linear-gradient(
+                90deg,
+                #ffffff,
+                #c084fc,
+                #a855f7
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* NAVIGATION */
+        .admin-menu {
+            background: var(--bg-menu);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-menu a {
+            display: inline-block;
+            position: relative;
+            color: var(--text-muted);
+            padding: 19px 22px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.25s ease;
+        }
+
+        .admin-menu a::after {
+            content: "";
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: 5px;
+            height: 2px;
+            background: var(--primary-light);
+            transform: scaleX(0);
+            transition: transform 0.25s ease;
+            border-radius: 10px;
+        }
+
+        .admin-menu a:hover {
+            color: #ffffff;
+            background: rgba(168, 85, 247, 0.12);
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+
+        .admin-menu a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* MAIN CONTENT */
+        .admin-content {
+            padding: 35px 40px;
+            min-height: 550px;
+            max-width: 1600px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* COMMON FORM CONTROLS */
+        .admin-content h1,
+        .admin-content h2,
+        .admin-content h3,
+        .admin-content h4,
+        .admin-content h5 {
+            color: #f5f3ff;
+            font-weight: 700;
+        }
+
+        .admin-content p {
+            color: #c4c0d9;
+        }
+
+        .admin-content a {
+            transition: all 0.2s ease;
+        }
+
+        .admin-content .btn {
+            border-radius: 9px;
+            padding: 9px 17px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .admin-content .btn-primary {
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            border: 1px solid #a855f7;
+            color: white;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.2);
+        }
+
+        .admin-content .btn-primary:hover {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(147, 51, 234, 0.35);
+        }
+
+        .admin-content .btn-success {
+            background: #059669;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .admin-content .btn-danger {
+            background: #be123c;
+            border-color: #f43f5e;
+            color: white;
+        }
+
+        .admin-content .btn-warning {
+            background: #b45309;
+            border-color: #f59e0b;
+            color: white;
+        }
+
+        .admin-content .form-control,
+        .admin-content select,
+        .admin-content textarea,
+        .admin-content input[type="text"],
+        .admin-content input[type="number"],
+        .admin-content input[type="email"],
+        .admin-content input[type="password"],
+        .admin-content input[type="date"] {
+            background: #11111b;
+            color: #f5f3ff;
+            border: 1px solid #343047;
+            border-radius: 8px;
+            min-height: 40px;
+            box-shadow: none;
+        }
+
+        .admin-content .form-control:focus,
+        .admin-content select:focus,
+        .admin-content textarea:focus,
+        .admin-content input:focus {
+            background: #151521;
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+            outline: none;
+        }
+
+        .admin-content label {
+            color: #ddd6fe;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* TABLES */
+        .admin-content .table {
+            width: 100%;
+            color: #e9e5f7;
+            background: #151521;
+            border: 1px solid #29263b;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .admin-content .table thead th {
+            background: #211a32;
+            color: #d8b4fe;
+            border-bottom: 1px solid #3b2b54;
+            border-top: none;
+            padding: 16px 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .admin-content .table tbody td {
+            border-top: 1px solid #29263b;
+            padding: 14px;
+            vertical-align: middle;
+        }
+
+        .admin-content .table tbody tr {
+            background: #151521;
+            transition: background 0.2s ease;
+        }
+
+        .admin-content .table tbody tr:hover {
+            background: #201a2d;
+        }
+
+        .admin-content .table a {
+            color: #c084fc;
+        }
+
+        .admin-content .table a:hover {
+            color: #e9d5ff;
+            text-decoration: none;
+        }
+
+        /* CARDS */
+        .admin-content .card {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 24px;
+        }
+
+        .admin-content .card-header {
+            background: #201a2d;
+            color: #e9d5ff;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+        }
+
+        .admin-content .card-body {
+            color: #e9e5f7;
+        }
+
+        /* PAGINATION */
+        .admin-content .pagination > li > a,
+        .admin-content .pagination > li > span {
+            background: #151521;
+            color: #c084fc;
+            border-color: #343047;
+        }
+
+        .admin-content .pagination > .active > a,
+        .admin-content .pagination > .active > span {
+            background: #9333ea;
+            color: white;
+            border-color: #9333ea;
+        }
+
+        /* FOOTER */
+        .admin-footer {
+            background: #101019;
+            color: #77748f;
+            padding: 24px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            letter-spacing: 0.4px;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 9px;
+            height: 9px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0b0b12;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #49305f;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9333ea;
+        }
+
+        /* ANIMATION */
+        @@keyframes fadeIn {
+            fadeIn {
+                from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVE */
+        @@media (max-width: 768px) {
+            .admin-header {
+                padding: 20px;
+            }
+
+            .admin-header h3 {
+                font-size: 21px;
+            }
+
+            .admin-menu {
+                padding: 8px 12px;
+                gap: 3px;
+            }
+
+            .admin-menu a {
+                padding: 13px 12px;
+                font-size: 13px;
+            }
+
+            .admin-content {
+                padding: 22px 15px;
+            }
+
+            .admin-content .table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-header">
+        <h3>KTBECK - ADMIN</h3>
+    </div>
+
+    <div class="admin-menu">
+        <a href="@Url.Action("Index", "Home", new { area = "Admin" })">
+            Trang chủ
+        </a>
+
+        <a href="@Url.Action("Index", "Products", new { area = "Admin" })">
+            Quản lý sản phẩm
+        </a>
+
+        <a href="@Url.Action("Index", "Orders", new { area = "Admin" })">
+            Đơn hàng
+        </a>
+    </div>
+
+    <div class="admin-content">
+        @RenderBody()
+    </div>
+
+    <div class="admin-footer">
+        © 2026 - KTBECK Admin | Management System
+    </div>
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+</body>
+</html>

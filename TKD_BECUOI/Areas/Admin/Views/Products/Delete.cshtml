@@ -1,0 +1,63 @@
+﻿@model TKD_BECUOI.Models.Product
+
+@{
+    ViewBag.Title = "Xóa sản phẩm";
+}
+
+<h2 class="mb-4 text-danger">XÁC NHẬN XÓA SẢN PHẨM</h2>
+
+<div class="admin-card" style="max-width:700px;">
+
+    <div class="alert alert-warning">
+        Bạn có chắc chắn muốn xóa sản phẩm này không?
+    </div>
+
+    <div class="text-center mb-3">
+
+        @if (!String.IsNullOrEmpty(Model.ProductImage))
+        {
+            <img src="@Model.ProductImage"
+                 style="width:180px;height:180px;object-fit:contain;" />
+        }
+
+    </div>
+
+    <p>
+        <strong>Mã sản phẩm:</strong>
+        @Model.ProductID
+    </p>
+
+    <p>
+        <strong>Tên sản phẩm:</strong>
+        @Model.ProductName
+    </p>
+
+    <p>
+        <strong>Danh mục:</strong>
+        @(Model.Category != null
+            ? Model.Category.CategoryName
+            : "Chưa phân loại")
+    </p>
+
+    <p>
+        <strong>Giá:</strong>
+        @String.Format("{0:N0} VNĐ", Model.ProductPrice)
+    </p>
+
+    @using (Html.BeginForm("Delete", "Products",
+        new { area = "Admin", id = Model.ProductID },
+        FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn btn-danger">
+            Xác nhận xóa
+        </button>
+
+        <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+           class="btn btn-secondary">
+            Hủy
+        </a>
+    }
+
+</div>

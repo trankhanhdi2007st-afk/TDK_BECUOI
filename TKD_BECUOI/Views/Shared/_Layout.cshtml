@@ -1,0 +1,387 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewBag.Title - Apple Store</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        body {
+            padding-top: 0;
+            margin: 0;
+            background: #f5f5f7;
+            color: #1d1d1f;
+        }
+
+        /* THANH MENU */
+        .shop-navbar {
+            background: #1d1d1f;
+            color: white;
+            min-height: 60px;
+            height: auto;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1000;
+        }
+
+            .shop-navbar > .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                width: 100%;
+                padding-top: 0;
+            }
+
+            .shop-navbar .navbar-header {
+                float: none;
+                flex-shrink: 0;
+            }
+
+            .shop-navbar .navbar-brand {
+                color: white !important;
+                font-weight: bold;
+                font-size: 22px;
+            }
+
+                .shop-navbar .navbar-brand:hover {
+                    color: #fff !important;
+                }
+
+            /* HIỂN THỊ MENU */
+            .shop-navbar #shopMenu {
+                display: block !important;
+                height: auto !important;
+                padding: 0;
+                overflow: visible !important;
+                border: none;
+                box-shadow: none;
+                flex: 1;
+            }
+
+                .shop-navbar #shopMenu > ul.navbar-nav {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    float: right;
+                    margin: 0;
+                }
+
+                    .shop-navbar #shopMenu > ul.navbar-nav > li {
+                        float: none;
+                    }
+
+            .shop-navbar .navbar-nav > li > a {
+                display: block;
+                padding: 20px 15px;
+                line-height: 20px;
+                color: #eee !important;
+                white-space: nowrap;
+                text-decoration: none;
+                background: transparent;
+            }
+
+                .shop-navbar .navbar-nav > li > a:hover,
+                .shop-navbar .navbar-nav > li > a:focus {
+                    color: white !important;
+                    background: #38383a !important;
+                }
+
+            .shop-navbar .navbar-toggle {
+                display: none !important;
+            }
+
+            /* MENU TÀI KHOẢN */
+            .shop-navbar .account-dropdown {
+                position: relative;
+            }
+
+            .shop-navbar .account-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                left: auto;
+                min-width: 190px;
+                padding: 6px 0;
+                margin: 0;
+                list-style: none;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 5px 18px rgba(0, 0, 0, .18);
+                z-index: 99999;
+            }
+
+                .shop-navbar .account-menu.show {
+                    display: block !important;
+                }
+
+                .shop-navbar .account-menu li a {
+                    display: block;
+                    padding: 12px 16px;
+                    color: #222 !important;
+                    background: white !important;
+                    text-decoration: none;
+                    white-space: nowrap;
+                }
+
+                    .shop-navbar .account-menu li a:hover {
+                        background: #f0f0f0 !important;
+                        color: #0071e3 !important;
+                    }
+
+                .shop-navbar .account-menu .divider {
+                    height: 1px;
+                    margin: 5px 0;
+                    background: #eee;
+                }
+
+        /* NỘI DUNG */
+        .body-content {
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            min-height: 400px;
+        }
+
+        /* CHÂN TRANG */
+        .shop-footer {
+            background: #1d1d1f;
+            color: #aaa;
+            text-align: center;
+            padding: 30px 15px;
+            margin-top: 30px;
+        }
+
+            .shop-footer h4 {
+                color: #aaa;
+            }
+
+        /* MÀN HÌNH NHỎ */
+        @@media (max-width: 767px) {
+            .shop-navbar > .container {
+                display: block;
+            }
+
+            .shop-navbar .navbar-header {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .shop-navbar #shopMenu {
+                width: 100%;
+            }
+
+                .shop-navbar #shopMenu > ul.navbar-nav {
+                    float: none;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    width: 100%;
+                }
+
+            .shop-navbar .navbar-nav > li > a {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse shop-navbar">
+        <div class="container">
+
+            <div class="navbar-header">
+                @Html.ActionLink(
+                         " Apple Store",
+                         "Index",
+                         "Home",
+                         new { area = "" },
+                         new { @class = "navbar-brand" }
+                     )
+            </div>
+
+            <div id="shopMenu" class="navbar-collapse">
+
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        @Html.ActionLink(
+                                 "Trang chủ",
+                                 "Index",
+                                 "Home",
+                                 new { area = "" },
+                                 null
+                             )
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Index", "Home", new { area = "" })#sanpham">
+                            Sản phẩm
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="@Url.Action("Index", "Home", new { area = "" })#danhmuc">
+                            Danh mục
+                        </a>
+                    </li>
+
+                    <li>
+                        @Html.ActionLink(
+                                 "Giỏ hàng",
+                                 "Index",
+                                 "Cart",
+                                 new { area = "" },
+                                 null
+                             )
+                    </li>
+
+                    <li class="account-dropdown">
+
+                        <a href="#"
+                           id="accountToggle"
+                           aria-haspopup="true"
+                           aria-expanded="false"
+                           onclick="toggleAccountMenu(event)">
+                            Tài khoản <span class="caret"></span>
+                        </a>
+
+                        <ul id="accountMenu" class="account-menu">
+
+                            @if (Session["Username"] == null)
+                            {
+                                <li>
+                                    @Html.ActionLink(
+                                             "Đăng nhập",
+                                             "Login",
+                                             "Account",
+                                             new { area = "" },
+                                             null
+                                         )
+                                </li>
+
+                                <li>
+                                    @Html.ActionLink(
+                                             "Đăng ký",
+                                             "Register",
+                                             "Account",
+                                             new { area = "" },
+                                             null
+                                         )
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a href="javascript:void(0)">
+                                        Xin chào, @Session["Username"]
+                                    </a>
+                                </li>
+
+                                <li>
+                                    @Html.ActionLink(
+                                             "Lịch sử mua hàng",
+                                             "Index",
+                                             "MyOrder",
+                                             new { area = "" },
+                                             null
+                                         )
+                                </li>
+
+                                <li class="divider"></li>
+
+                                <li>
+                                    @Html.ActionLink(
+                                             "Đăng xuất",
+                                             "Logout",
+                                             "Account",
+                                             new { area = "" },
+                                             null
+                                         )
+                                </li>
+                            }
+
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="body-content">
+        @RenderBody()
+    </div>
+
+    <footer class="shop-footer">
+        <h4> Apple Store</h4>
+        <p>Khám phá công nghệ - Nâng tầm trải nghiệm</p>
+        <p>© @DateTime.Now.Year Apple Store. All rights reserved.</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        function toggleAccountMenu(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var menu = document.getElementById("accountMenu");
+            var toggle = document.getElementById("accountToggle");
+
+            if (!menu || !toggle) {
+                return;
+            }
+
+            var isOpen = menu.classList.toggle("show");
+
+            toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        }
+
+        document.addEventListener("click", function (event) {
+            var menu = document.getElementById("accountMenu");
+            var dropdown = document.querySelector(".account-dropdown");
+            var toggle = document.getElementById("accountToggle");
+
+            if (menu && dropdown && !dropdown.contains(event.target)) {
+                menu.classList.remove("show");
+
+                if (toggle) {
+                    toggle.setAttribute("aria-expanded", "false");
+                }
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                var menu = document.getElementById("accountMenu");
+                var toggle = document.getElementById("accountToggle");
+
+                if (menu) {
+                    menu.classList.remove("show");
+                }
+
+                if (toggle) {
+                    toggle.setAttribute("aria-expanded", "false");
+                    toggle.focus();
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

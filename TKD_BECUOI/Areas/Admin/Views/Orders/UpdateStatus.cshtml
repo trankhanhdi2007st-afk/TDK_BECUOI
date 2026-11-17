@@ -1,0 +1,65 @@
+﻿@model TKD_BECUOI.Models.Order
+
+@{
+    ViewBag.Title = "Cập nhật trạng thái";
+}
+
+<h2 class="mb-4">CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG</h2>
+
+<div class="admin-card" style="max-width: 650px;">
+
+    <h5>Đơn hàng #@Model.OrderID</h5>
+
+    <p>
+        <strong>Khách hàng:</strong>
+        @(Model.Customer != null
+            ? Model.Customer.CustomerName
+            : "Không có thông tin")
+    </p>
+
+    <p>
+        <strong>Trạng thái hiện tại:</strong>
+        @Model.OrderStatus
+    </p>
+
+    <hr />
+
+    @using (Html.BeginForm("UpdateStatus", "Orders",
+        new { area = "Admin", id = Model.OrderID },
+        FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(
+                      false,
+                      "",
+                      new { @class = "text-danger" }
+                  )
+
+        <div class="mb-3">
+
+            <label class="form-label">
+                Chọn trạng thái mới
+            </label>
+
+            @Html.DropDownList(
+                          "trangThaiMoi",
+                          (SelectList)ViewBag.DanhSachTrangThai,
+                          "-- Chọn trạng thái --",
+                          new { @class = "form-select" }
+                      )
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Lưu thay đổi
+        </button>
+
+        <a href="@Url.Action("DetailedOrder", "Orders",
+            new { area = "Admin", id = Model.OrderID })"
+           class="btn btn-secondary">
+            Hủy
+        </a>
+    }
+
+</div>

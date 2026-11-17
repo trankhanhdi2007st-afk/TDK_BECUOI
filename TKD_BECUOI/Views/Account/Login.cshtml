@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Đăng nhập";
+}
+
+<style>
+    .account-card {
+        max-width: 430px;
+        margin: 55px auto;
+        padding: 35px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 25px rgba(0,0,0,.08);
+    }
+
+        .account-card h2 {
+            text-align: center;
+            font-weight: bold;
+            color: #1d1d1f;
+            margin-bottom: 8px;
+        }
+
+    .account-subtitle {
+        text-align: center;
+        color: #86868b;
+        margin-bottom: 28px;
+    }
+
+    .account-card label {
+        font-weight: 600;
+    }
+
+    .account-card .form-control {
+        height: 45px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+    }
+
+    .account-btn {
+        width: 100%;
+        padding: 12px;
+        background: #0071e3;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+        .account-btn:hover {
+            background: #005bb5;
+            color: white;
+        }
+
+    .account-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="container">
+    <div class="account-card">
+        <h2> Apple Store</h2>
+        <p class="account-subtitle">Đăng nhập tài khoản của bạn</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">
+                @ViewBag.Error
+            </div>
+        }
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input type="text" id="username" name="username"
+                       class="form-control"
+                       placeholder="Nhập tên đăng nhập"
+                       autocomplete="username" required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password"
+                       class="form-control"
+                       placeholder="Nhập mật khẩu"
+                       autocomplete="current-password" required />
+            </div>
+
+            <button type="submit" class="account-btn">
+                Đăng nhập
+            </button>
+        }
+
+        <p class="text-center">
+            Chưa có tài khoản?
+            @Html.ActionLink("Đăng ký ngay", "Register", "Account")
+        </p>
+
+        <a class="account-link"
+           href="@Url.Action("Index", "Home")">
+            Quay lại trang chủ
+        </a>
+    </div>
+</div>

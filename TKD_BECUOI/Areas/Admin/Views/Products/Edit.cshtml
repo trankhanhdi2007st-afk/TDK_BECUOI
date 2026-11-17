@@ -1,0 +1,116 @@
+﻿@model TKD_BECUOI.Models.Product
+
+@{
+    ViewBag.Title = "Sửa sản phẩm";
+}
+
+<h2 class="mb-4">CẬP NHẬT SẢN PHẨM</h2>
+
+<div class="admin-card" style="max-width:850px;">
+
+    @using (Html.BeginForm("Edit", "Products",
+        new { area = "Admin" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.ProductID)
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        <div class="mb-3">
+
+            <label class="form-label">Tên sản phẩm</label>
+
+            @Html.TextBoxFor(x => x.ProductName,
+                                    new { @class = "form-control" })
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">Danh mục</label>
+
+            @Html.DropDownListFor(
+                                    x => x.CategoryID,
+                                    (SelectList)ViewBag.CategoryID,
+                                    "-- Chọn danh mục --",
+                                    new { @class = "form-select" }
+                                )
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">Giá sản phẩm</label>
+
+            @Html.TextBoxFor(x => x.ProductPrice,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "number",
+                                        min = "1",
+                                        step = "1000"
+                                    })
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">Mô tả</label>
+
+            @Html.TextAreaFor(x => x.ProductDecription,
+                                    new { @class = "form-control", rows = "4" })
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">Link ảnh sản phẩm</label>
+
+            @Html.TextBoxFor(x => x.ProductImage,
+                                    new
+                                    {
+                                        @class = "form-control",
+                                        type = "url",
+                                        id = "ProductImage"
+                                    })
+
+            <img id="anhPreview"
+                 src="@Model.ProductImage"
+                 style="width:200px;height:200px;object-fit:contain;
+                        border:1px solid #ddd;margin-top:15px;" />
+
+            <p id="loiAnh" class="text-danger"></p>
+
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Lưu thay đổi
+        </button>
+
+        <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+           class="btn btn-secondary">
+            Quay lại
+        </a>
+    }
+
+</div>
+
+<script>
+    var oNhapAnh = document.getElementById("ProductImage");
+    var anhPreview = document.getElementById("anhPreview");
+    var loiAnh = document.getElementById("loiAnh");
+
+    oNhapAnh.addEventListener("input", function () {
+        anhPreview.src = this.value;
+    });
+
+    anhPreview.onerror = function () {
+        this.style.display = "none";
+        loiAnh.innerText = "Không tải được ảnh.";
+    };
+
+    anhPreview.onload = function () {
+        this.style.display = "block";
+        loiAnh.innerText = "";
+    };</script>

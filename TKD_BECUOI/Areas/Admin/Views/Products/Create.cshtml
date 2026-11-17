@@ -1,0 +1,196 @@
+﻿@model TKD_BECUOI.Models.Product
+
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+}
+
+<style>
+    .product-form {
+        max-width: 850px;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+        .product-form label {
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+    .preview-image {
+        width: 220px;
+        height: 220px;
+        object-fit: contain;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        display: none;
+        margin-top: 15px;
+    }
+
+    .text-danger {
+        font-size: 13px;
+    }
+</style>
+
+<h2 class="mb-4">THÊM SẢN PHẨM MỚI</h2>
+
+<div class="product-form">
+
+    @using (Html.BeginForm("Create", "Products",
+        new { area = "Admin" }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+        <div class="mb-3">
+
+            <label>Tên sản phẩm</label>
+
+            @Html.TextBoxFor(x => x.ProductName,
+                                         new
+                                         {
+                                             @class = "form-control",
+                                             placeholder = "Nhập tên sản phẩm..."
+                                         })
+
+            @Html.ValidationMessageFor(
+                                         x => x.ProductName,
+                                         "",
+                                         new { @class = "text-danger" }
+                                     )
+
+        </div>
+
+        <div class="mb-3">
+
+            <label>Danh mục sản phẩm</label>
+
+            @Html.DropDownListFor(
+                                         x => x.CategoryID,
+                                         (SelectList)ViewBag.CategoryID,
+                                         "-- Chọn danh mục --",
+                                         new { @class = "form-select" }
+                                     )
+
+            @Html.ValidationMessageFor(
+                                         x => x.CategoryID,
+                                         "",
+                                         new { @class = "text-danger" }
+                                     )
+
+        </div>
+
+        <div class="mb-3">
+
+            <label>Giá sản phẩm (VNĐ)</label>
+
+            @Html.TextBoxFor(x => x.ProductPrice,
+                                         new
+                                         {
+                                             @class = "form-control",
+                                             type = "number",
+                                             min = "1",
+                                             step = "1000",
+                                             placeholder = "Ví dụ: 15000000"
+                                         })
+
+            @Html.ValidationMessageFor(
+                                         x => x.ProductPrice,
+                                         "",
+                                         new { @class = "text-danger" }
+                                     )
+
+        </div>
+
+        <div class="mb-3">
+
+            <label>Mô tả sản phẩm</label>
+
+            @Html.TextAreaFor(x => x.ProductDecription,
+                                         new
+                                         {
+                                             @class = "form-control",
+                                             rows = "4",
+                                             placeholder = "Nhập mô tả sản phẩm..."
+                                         })
+
+        </div>
+
+        <div class="mb-3">
+
+            <label>Đường dẫn hình ảnh sản phẩm</label>
+
+            @Html.TextBoxFor(x => x.ProductImage,
+                                         new
+                                         {
+                                             @class = "form-control",
+                                             type = "url",
+                                             id = "ProductImage",
+                                             placeholder = "Dán link ảnh trực tiếp vào đây..."
+                                         })
+
+            @Html.ValidationMessageFor(
+                                         x => x.ProductImage,
+                                         "",
+                                         new { @class = "text-danger" }
+                                     )
+
+
+            <div>
+                <img id="anhPreview"
+                     class="preview-image"
+                     alt="Ảnh xem trước" />
+            </div>
+
+            <p id="loiAnh" class="text-danger mt-2"></p>
+
+        </div>
+
+        <hr />
+
+        <button type="submit" class="btn btn-primary">
+            Lưu sản phẩm
+        </button>
+
+        <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+           class="btn btn-secondary">
+            Quay lại
+        </a>
+    }
+
+</div>
+
+<script>
+    var oNhapAnh = document.getElementById("ProductImage");
+    var anhPreview = document.getElementById("anhPreview");
+    var loiAnh = document.getElementById("loiAnh");
+
+    oNhapAnh.addEventListener("input", function () {
+
+        var link = oNhapAnh.value.trim();
+
+        loiAnh.innerText = "";
+
+        if (link === "") {
+            anhPreview.style.display = "none";
+            anhPreview.src = "";
+            return;
+        }
+
+        anhPreview.src = link;
+        anhPreview.style.display = "block";
+    });
+
+    anhPreview.onerror = function () {
+        anhPreview.style.display = "none";
+        loiAnh.innerText = "Không tải được ảnh. Hãy kiểm tra lại đường dẫn.";
+    };
+
+    anhPreview.onload = function () {
+        anhPreview.style.display = "block";
+        loiAnh.innerText = "";
+    };
+</script>

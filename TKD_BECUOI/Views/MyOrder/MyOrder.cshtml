@@ -1,0 +1,426 @@
+﻿@model IEnumerable<TKD_BECUOI.Models.Order>
+
+@{
+    ViewBag.Title = "Đơn hàng của tôi";
+
+    string[] trangThais =
+    {
+        "Tất cả",
+        "Chờ thanh toán",
+        "Đang xử lý",
+        "Đang vận chuyển",
+        "Đã giao",
+        "Đã hủy"
+    };
+
+    string trangThaiHienTai = ViewBag.TrangThai ?? "Tất cả";
+
+    var danhSachDon = Model == null
+        ? new List<TKD_BECUOI.Models.Order>() : Model.ToList();
+}
+
+<style>
+    .my-order {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+        .my-order h2 {
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+
+    .order-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        background: white;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+        .order-tabs a {
+            flex: 1;
+            min-width: 120px;
+            padding: 16px 10px;
+            text-align: center;
+            color: #555;
+            text-decoration: none;
+            border-bottom: 3px solid transparent;
+        }
+
+            .order-tabs a.active {
+                color: #087bdb;
+                border-bottom-color: #087bdb;
+                font-weight: bold;
+            }
+
+    .search-order {
+        display: flex;
+        margin-bottom: 25px;
+        gap: 10px;
+    }
+
+        .search-order input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-order button {
+            background: #087bdb;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 5px;
+        }
+
+    .order-card {
+        background: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 7px;
+        border: 1px solid #eee;
+    }
+
+    .order-status {
+        font-weight: bold;
+        color: #087bdb;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 15px;
+    }
+
+    .order-product {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .order-product img {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+    .product-info {
+        flex: 1;
+    }
+
+        .product-info h5 {
+            margin-bottom: 8px;
+        }
+
+    .product-price {
+        color: #333;
+        font-weight: bold;
+    }
+
+    .order-bottom {
+        text-align: right;
+        margin-top: 15px;
+    }
+
+    .order-total {
+        font-size: 19px;
+        margin-bottom: 15px;
+    }
+
+    .order-bottom button,
+    .order-bottom a {
+        display: inline-block;
+        padding: 9px 17px;
+        margin-left: 5px;
+        border: 1px solid #087bdb;
+        border-radius: 5px;
+        background: white;
+        color: #087bdb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .order-bottom button:hover,
+        .order-bottom a:hover {
+            background: #087bdb;
+            color: white;
+        }
+
+    .btn-buy {
+        display: inline-block;
+        padding: 9px 17px;
+        border: 1px solid #087bdb;
+        background: white;
+        color: #087bdb;
+        border-radius: 5px;
+    }
+
+    .empty-order {
+        background: white;
+        padding: 50px 20px;
+        text-align: center;
+        color: #777;
+        border-radius: 8px;
+    }
+
+        .empty-order h4 {
+            color: #d9534f;
+        }
+
+    .hidden-order {
+        display: none;
+    }
+
+    .view-more {
+        padding: 8px 15px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    @@media(max-width: 600px) {
+        .order-product {
+            align-items: flex-start;
+        }
+
+        .search-order {
+            flex-direction: column;
+        }
+
+            .search-order button {
+                padding: 12px;
+            }
+    }
+</style>
+
+<div class="my-order">
+
+    <h2>Đơn hàng của tôi</h2>
+
+    <!-- TAB TRẠNG THÁI -->
+    <div class="order-tabs">
+
+        @foreach (var tt in trangThais)
+        {
+            <a class="@(trangThaiHienTai == tt ? "active" : "")"
+               href="@Url.Action("Index", "MyOrder", new {
+                   trangThai = tt,
+                   tuKhoa = ViewBag.TuKhoa
+               })">
+                @tt
+            </a>
+        }
+
+    </div>
+
+    <!-- TÌM KIẾM -->
+    @using (Html.BeginForm("Index", "MyOrder", FormMethod.Get))
+    {
+        <div class="search-order">
+
+            <input type="text"
+                   name="tuKhoa"
+                   value="@ViewBag.TuKhoa"
+                   placeholder="Tìm đơn hàng theo Mã đơn hàng hoặc Tên sản phẩm..." />
+
+            <input type="hidden"
+                   name="trangThai"
+                   value="@trangThaiHienTai" />
+
+            <button type="submit">
+                Tìm đơn hàng
+            </button>
+
+        </div>
+    }
+
+    @if (danhSachDon.Count == 0)
+    {
+        <div class="empty-order">
+
+            @if (ViewBag.CoDonHang == true)
+            {
+                <h4>KHÔNG TÌM THẤY ĐƠN HÀNG PHÙ HỢP.</h4>
+                <p>Vui lòng thử từ khóa hoặc trạng thái khác.</p>
+            }
+            else
+            {
+                <h4>BẠN CHƯA CÓ ĐƠN HÀNG NÀO.</h4>
+                <p>HÃY ĐẶT ĐƠN NGAY.</p>
+
+                <a href="@Url.Action("Index", "Home")"
+                   class="btn btn-primary">
+                    Mua sắm ngay
+                </a>
+            }
+
+        </div>
+    }
+    else
+    {
+        // Tất cả đơn: gom nhóm theo trạng thái
+        var cacTrangThai = trangThaiHienTai == "Tất cả"
+            ? trangThais.Skip(1)
+            : new[] { trangThaiHienTai };
+
+        foreach (var tt in cacTrangThai)
+        {
+            var nhomDon = danhSachDon
+                .Where(x => x.OrderStatus == tt)
+                .OrderByDescending(x => x.OrderDate)
+                .Take(50)
+                .ToList();
+
+            if (nhomDon.Count > 0)
+            {
+                <div class="order-group">
+
+                    <h4 class="mb-3">@tt</h4>
+
+                    @for (int i = 0; i < nhomDon.Count; i++)
+                    {
+                        var don = nhomDon[i];
+
+                        <div class="order-card @(i >= 2 ? "hidden-order" : "")"
+                             data-order-group="@tt.Replace(" ", "-")">
+
+                            <div class="order-status">
+                                Đơn hàng #@don.OrderID
+                                <span style="float:right">
+                                    @don.OrderStatus
+                                </span>
+                            </div>
+
+                            @foreach (var ct in don.OrderDetail)
+                            {
+                                <div class="order-product">
+
+                                    @if (ct.Product != null &&
+                                         !String.IsNullOrEmpty(ct.Product.ProductImage))
+                                    {
+                                        <img src="@ct.Product.ProductImage"
+                                             alt="@ct.Product.ProductName" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://placehold.co/85x85?text=Product"
+                                             alt="Sản phẩm" />
+                                    }
+
+                                    <div class="product-info">
+
+                                        <h5>
+                                            @(ct.Product != null
+                                                ? ct.Product.ProductName
+                                                : "Sản phẩm không tồn tại")
+                                        </h5>
+
+                                        <div>
+                                            Số lượng: @ct.Quantity
+                                        </div>
+
+                                    </div>
+
+                                    <div class="product-price">
+                                        @String.Format("{0:N0} đ", ct.UnitPrice * ct.Quantity)
+                                    </div>
+
+                                </div>
+                            }
+
+                            <div class="order-bottom">
+
+                                <div class="order-total">
+                                    Tổng tiền:
+                                    <strong>
+                                        @String.Format("{0:N0} đ", don.TotalAmount)
+                                    </strong>
+                                </div>
+
+                                @foreach (var ct in don.OrderDetail)
+                                {
+                                    using (Html.BeginForm(
+                                        "BuyAgain",
+                                        "MyOrder",
+                                        FormMethod.Post,
+                                        new { style = "display:inline-block" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden"
+                                               name="productID"
+                                               value="@ct.ProductID" />
+
+                                        <button type="submit">
+                                            MUA LẠI
+                                        </button>
+                                    }
+                                }
+
+                                @if (don.OrderDetail.Any())
+                                {
+                                    <a href="@Url.Action(
+    "Details",
+    "Home",
+    new { id = don.OrderDetail.First().ProductID })">
+                                        XEM CHI TIẾT
+                                    </a>
+                                }
+
+                            </div>
+
+                        </div>
+                    }
+
+                    @if (nhomDon.Count > 2)
+                    {
+                        <div class="text-center mb-4">
+                            <button type="button"
+                                    class="view-more"
+                                    onclick="xemThem(this)">
+                                Xem thêm
+                            </button>
+                        </div>
+                    }
+
+                </div>
+            }
+        }
+    }
+
+</div>
+
+<script>function xemThem(button) {
+
+        var group = button.closest(".order-group");
+
+        var hiddenOrders = group.querySelectorAll(".hidden-order");
+
+        var count = 0;
+
+        hiddenOrders.forEach(function (item) {
+
+            if (item.style.display !== "block") {
+
+                if (count < 48) {
+                    item.style.display = "block";
+                    item.classList.remove("hidden-order");
+                    count++;
+                }
+
+            }
+
+        });
+
+        var conLai = group.querySelectorAll(".hidden-order");
+
+        if (conLai.length === 0) {
+            button.style.display = "none";
+        }
+    }</script>

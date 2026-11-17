@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Trang thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .stat-page {
+        padding: 25px;
+    }
+
+    .stat-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #1d1d1f;
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 3px 12px rgba(0,0,0,.07);
+        border-left: 5px solid #0071e3;
+        min-height: 135px;
+    }
+
+        .stat-card h4 {
+            font-size: 15px;
+            color: #666;
+            margin-top: 0;
+            margin-bottom: 18px;
+        }
+
+        .stat-card h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            color: #1d1d1f;
+        }
+
+    .stat-blue {
+        border-left-color: #0071e3;
+    }
+
+    .stat-green {
+        border-left-color: #28a745;
+    }
+
+    .stat-orange {
+        border-left-color: #f0ad4e;
+    }
+
+    .stat-cyan {
+        border-left-color: #17a2b8;
+    }
+
+    @@media (max-width: 767px) {
+        .stat-page {
+            padding: 12px;
+        }
+
+        .stat-card h2 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="container-fluid stat-page">
+    <h2 class="stat-title">📊 TRANG THỐNG KÊ</h2>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-blue">
+                <h4>Tổng đơn hàng</h4>
+                <h2>@(ViewBag.TongDonHang ?? 0)</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-green">
+                <h4>Tổng khách hàng</h4>
+                <h2>@(ViewBag.TongKhachHang ?? 0)</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-orange">
+                <h4>Tổng sản phẩm</h4>
+                <h2>@(ViewBag.TongSanPham ?? 0)</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card stat-cyan">
+                <h4>Doanh thu đơn đã giao</h4>
+                <h2>@String.Format("{0:N0} VNĐ", ViewBag.TongDoanhThu ?? 0m)</h2>
+            </div>
+        </div>
+    </div>
+</div>

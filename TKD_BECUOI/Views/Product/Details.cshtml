@@ -1,0 +1,44 @@
+﻿@model TKD_BECUOI.Models.Product
+
+@{
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+<div style="max-width:1000px;margin:40px auto;padding:20px;">
+
+    <h2>CHI TIẾT SẢN PHẨM</h2>
+
+    <hr />
+
+    <div class="row">
+
+        <div class="col-md-5">
+
+            @if (!String.IsNullOrEmpty(Model.ProductImage))
+            {
+                <img src="@Model.ProductImage"
+                     style="width:100%;max-height:400px;object-fit:contain;" />
+            }
+
+        </div>
+
+        <div class="col-md-7">
+
+            <h3>@Model.ProductName</h3>
+
+            <h4 class="text-danger">
+                @String.Format("{0:N0} VNĐ", Model.ProductPrice)
+            </h4>
+
+            <p>@Model.ProductDecription</p>
+
+            <a href="@Url.Action("Index", "MyOrder")"
+               class="btn btn-secondary">
+                Quay lại đơn hàng
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

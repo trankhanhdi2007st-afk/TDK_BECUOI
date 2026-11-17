@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "Lịch sử mua hàng";
+}
+
+<style>
+    .order-history {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 5px 20px rgba(0,0,0,.06);
+        min-height: 350px;
+    }
+
+        .order-history h2 {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .order-history .subtitle {
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+    .order-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .order-table th,
+        .order-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        .order-table th {
+            background: #f5f5f7;
+        }
+
+    .empty-orders {
+        text-align: center;
+        padding: 45px 10px;
+        color: #777;
+    }
+
+    .order-btn {
+        display: inline-block;
+        padding: 11px 22px;
+        border-radius: 25px;
+        background: #0071e3;
+        color: white;
+        text-decoration: none;
+        margin-top: 12px;
+    }
+
+        .order-btn:hover {
+            background: #005bb5;
+            color: white;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 768px) {
+        .order-history {
+            margin: 20px 10px;
+            padding: 18px;
+            overflow-x: auto;
+        }
+
+        .order-table {
+            min-width: 600px;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="order-history">
+        <h2>📦 Lịch sử mua hàng</h2>
+
+        <p class="subtitle">
+            Theo dõi các đơn hàng của bạn tại Apple Store.
+        </p>
+
+        @if (Session["Username"] == null)
+        {
+            <div class="alert alert-warning">
+                Bạn cần đăng nhập để xem lịch sử mua hàng.
+            </div>
+
+            <a href="@Url.Action("Login", "Account")"
+               class="order-btn">
+                Đăng nhập ngay
+            </a>
+        }
+        else
+        {
+            <p>
+                Xin chào,
+                <strong>@Session["Username"]</strong>!
+            </p>
+
+            if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">
+                    @ViewBag.Error
+                </div>
+            }
+            else if (ViewBag.Orders != null &&
+                     ((IEnumerable<object>)ViewBag.Orders).Any())
+            {
+                <p>Đơn hàng của bạn:</p>
+
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in ViewBag.Orders)
+                        {
+                            <tr>
+                                <td>@order.OrderID</td>
+                                <td>@order.OrderDate</td>
+                                <td>@order.TotalAmount</td>
+                                <td>@order.Status</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-orders">
+                    <h3>🛍️ Chưa có đơn hàng nào</h3>
+                    <p>Các đơn hàng đã đặt sẽ xuất hiện tại đây.</p>
+
+                    <a href="@Url.Action("Index", "Home")"
+                       class="order-btn">
+                        Tiếp tục mua sắm
+                    </a>
+                </div>
+            }
+        }
+    </div>
+</div>

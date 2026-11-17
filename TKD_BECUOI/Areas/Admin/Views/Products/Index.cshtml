@@ -1,0 +1,147 @@
+﻿@model IEnumerable<TKD_BECUOI.Models.Product>
+
+@{
+    ViewBag.Title = "Quản lý sản phẩm";
+}
+
+<h2 class="mb-4">QUẢN LÝ SẢN PHẨM</h2>
+
+@if (TempData["ThongBao"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["ThongBao"]
+    </div>
+}
+
+@if (TempData["Loi"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Loi"]
+    </div>
+}
+
+<div class="admin-card mb-4">
+
+    @using (Html.BeginForm("Index", "Products", FormMethod.Get,
+        new { area = "Admin" }))
+    {
+        <div class="row">
+
+            <div class="col-md-8">
+                <input type="text"
+                       name="tuKhoa"
+                       class="form-control"
+                       value="@ViewBag.TuKhoa"
+                       placeholder="Nhập tên sản phẩm cần tìm..." />
+            </div>
+
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">
+                    Tìm kiếm
+                </button>
+
+                <a href="@Url.Action("Index", "Products", new { area = "Admin" })"
+                   class="btn btn-secondary">
+                    Làm mới
+                </a>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="admin-card">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h5>DANH SÁCH SẢN PHẨM</h5>
+
+        <a href="@Url.Action("Create", "Products", new { area = "Admin" })"
+           class="btn btn-success">
+            + Thêm sản phẩm
+        </a>
+
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            CHƯA CÓ SẢN PHẨM NÀO
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Mã SP</th>
+                        <th>Hình ảnh</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Danh mục</th>
+                        <th>Giá</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.ProductID</td>
+
+                            <td>
+                                @if (!String.IsNullOrEmpty(item.ProductImage))
+                                {
+                                    <img src="@item.ProductImage"
+                                         style="width:80px;height:80px;object-fit:contain;"
+                                         onerror="this.style.display='none';" />
+                                }
+                                else
+                                {
+                                    <span>Chưa có ảnh</span>
+                                }
+                            </td>
+
+                            <td>@item.ProductName</td>
+
+                            <td>
+                                @(item.Category != null
+                                    ? item.Category.CategoryName
+                                    : "Chưa phân loại")
+                            </td>
+
+                            <td class="text-danger fw-bold">
+                                @String.Format("{0:N0} VNĐ", item.ProductPrice)
+                            </td>
+
+                            <td>
+                                <a href="@Url.Action("Edit", "Products",
+                                    new { area = "Admin", id = item.ProductID })"
+                                   class="btn btn-warning btn-sm">
+                                    Sửa
+                                </a>
+
+                                <a href="@Url.Action("Delete", "Products",
+                                    new { area = "Admin", id = item.ProductID })"
+                                   class="btn btn-danger btn-sm">
+                                    Xóa
+                                </a>
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    }
+
+</div>

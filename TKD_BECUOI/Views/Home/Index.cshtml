@@ -1,0 +1,446 @@
+﻿@model IEnumerable<TKD_BECUOI.Models.Product>
+
+
+@{
+    ViewBag.Title = "Trang chủ";
+    var categories = ViewBag.Categories as IEnumerable<TKD_BECUOI.Models.Category>;
+    int? selectedCategory = ViewBag.CategoryId as int?;
+    string keyword = ViewBag.TuKhoa as string;
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f5f5f7;
+        color: #1d1d1f;
+        font-family: Arial, sans-serif;
+    }
+
+    .shop-container {
+        max-width: 1250px;
+        margin: auto;
+        padding: 25px 15px 50px;
+    }
+
+    /* Banner */
+    .hero {
+        background: linear-gradient(120deg, #111827, #343a40);
+        color: white;
+        border-radius: 22px;
+        padding: 65px 45px;
+        margin-bottom: 35px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            color: #ddd;
+            max-width: 550px;
+            line-height: 1.7;
+        }
+
+        .hero a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 13px 25px;
+            background: white;
+            color: #111;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .hero a:hover {
+                background: #ddd;
+            }
+
+    /* Tiêu đề */
+    .section-title {
+        font-size: 27px;
+        font-weight: bold;
+        margin: 35px 0 20px;
+    }
+
+    /* Danh mục */
+    .category-list {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+    }
+
+    .category-item {
+        display: block;
+        text-align: center;
+        background: white;
+        padding: 23px 10px;
+        border-radius: 15px;
+        color: #222;
+        text-decoration: none;
+        border: 2px solid transparent;
+        transition: 0.2s;
+    }
+
+        .category-item:hover {
+            border-color: #0071e3;
+            color: #0071e3;
+            text-decoration: none;
+            transform: translateY(-4px);
+        }
+
+    .category-icon {
+        font-size: 32px;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .category-name {
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .category-item.active {
+        border-color: #0071e3;
+        color: #0071e3;
+    }
+
+    /* Tìm kiếm */
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+    }
+
+        .search-box input {
+            flex: 1;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 0 15px;
+            font-size: 15px;
+            box-shadow: none;
+        }
+
+        .search-box button {
+            border: none;
+            background: #0071e3;
+            color: white;
+            padding: 0 25px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+            .search-box button:hover {
+                background: #005bb5;
+            }
+
+    /* Sản phẩm */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 16px;
+        padding: 15px;
+        transition: 0.25s;
+        border: 1px solid #eee;
+    }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+    .product-image {
+        width: 100%;
+        height: 220px;
+        object-fit: contain;
+        padding: 10px;
+        background: #fff;
+        border-radius: 12px;
+    }
+
+    .product-category {
+        color: #777;
+        font-size: 13px;
+        margin-top: 12px;
+    }
+
+    .product-name {
+        font-size: 16px;
+        font-weight: bold;
+        min-height: 42px;
+        margin-top: 8px;
+        color: #1d1d1f;
+    }
+
+    .product-price {
+        color: #e53935;
+        font-size: 19px;
+        font-weight: bold;
+        margin: 12px 0;
+    }
+
+    .detail-button {
+        display: block;
+        text-align: center;
+        background: #0071e3;
+        color: white;
+        padding: 11px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .detail-button:hover {
+            color: white;
+            background: #005bb5;
+            text-decoration: none;
+        }
+
+    .empty-product {
+        grid-column: 1 / -1;
+        text-align: center;
+        background: white;
+        padding: 50px 20px;
+        border-radius: 15px;
+        color: #777;
+    }
+
+        .empty-product h3 {
+            color: #333;
+        }
+
+    /* Responsive */
+    @@media (max-width: 900px) {
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .category-list {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 550px) {
+        .hero {
+            padding: 40px 22px;
+        }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .product-image {
+            height: 150px;
+        }
+
+        .product-name {
+            font-size: 14px;
+        }
+
+        .product-price {
+            font-size: 16px;
+        }
+
+        .category-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .search-box {
+            flex-wrap: wrap;
+        }
+
+            .search-box input {
+                min-width: 100%;
+            }
+
+            .search-box button {
+                height: 45px;
+                width: 100%;
+            }
+    }
+</style>
+
+<div class="shop-container">
+
+    <!-- BANNER -->
+    <div class="hero">
+        <h1>Apple Store</h1>
+        <p>
+            Khám phá thế giới công nghệ Apple.
+            Những sản phẩm chính hãng, thiết kế đẳng cấp
+            và trải nghiệm tuyệt vời đang chờ bạn.
+        </p>
+
+        <a href="#sanpham">Khám phá sản phẩm</a>
+    </div>
+
+    <!-- DANH MỤC -->
+    <h2 class="section-title">Danh mục sản phẩm</h2>
+
+    <div class="category-list">
+
+        <a href="@Url.Action("Index", "Home")"
+           class="category-item @(selectedCategory == null ? "active" : "")">
+            <span class="category-icon">🍎</span>
+            <span class="category-name">Tất cả</span>
+        </a>
+
+        @if (categories != null)
+        {
+            foreach (var category in categories)
+            {
+                string icon = "📱";
+
+                if (category.CategoryName != null)
+                {
+                    if (category.CategoryName.IndexOf("MacBook",
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        icon = "💻";
+                    }
+                    else if (category.CategoryName.IndexOf("AirPods",
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        icon = "🎧";
+                    }
+                    else if (category.CategoryName.IndexOf("Watch",
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        icon = "⌚";
+                    }
+                    else if (category.CategoryName.IndexOf("Phụ kiện",
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        icon = "🔌";
+                    }
+                }
+
+                <a href="@Url.Action("Index", "Home",
+                    new { categoryId = category.CategoryID })"
+                   class="category-item @(selectedCategory == category.CategoryID ? "active" : "")">
+
+                    <span class="category-icon">@icon</span>
+                    <span class="category-name">@category.CategoryName</span>
+                </a>
+            }
+        }
+    </div>
+
+    <!-- DANH SÁCH SẢN PHẨM -->
+    <h2 class="section-title" id="sanpham">Sản phẩm</h2>
+
+    <!-- TÌM KIẾM -->
+    <form method="get"
+          action="@Url.Action("Index", "Home")"
+          class="search-box">
+
+        <input type="text"
+               name="tuKhoa"
+               value="@keyword"
+               placeholder="Tìm kiếm iPhone, MacBook, AirPods..." />
+
+        @if (selectedCategory.HasValue)
+        {
+            <input type="hidden"
+                   name="categoryId"
+                   value="@selectedCategory.Value" />
+        }
+
+        <button type="submit">Tìm kiếm</button>
+    </form>
+
+    <!-- HIỂN THỊ SẢN PHẨM -->
+    <div class="product-grid">
+
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
+            {
+                <div class="product-card">
+
+                    @if (!String.IsNullOrEmpty(product.ProductImage))
+                    {
+                        <img src="@product.ProductImage"
+                             class="product-image"
+                             alt="@product.ProductName"
+                             onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=No+Image';" />
+                    }
+                    else
+                    {
+                        <img src="https://placehold.co/400x300?text=No+Image"
+                             class="product-image"
+                             alt="Không có hình ảnh" />
+                    }
+
+                    <div class="product-category">
+                        @(product.Category != null
+                            ? product.Category.CategoryName
+                            : "Chưa phân loại")
+                    </div>
+
+                    <div class="product-name">
+                        @product.ProductName
+                    </div>
+
+                    <div class="product-price">
+                        @String.Format("{0:N0} ₫", product.ProductPrice)
+                    </div>
+
+                    <a href="@Url.Action("Details", "Home", new { id = product.ProductID })" class="detail-button">
+                        Xem chi tiết
+                    </a>
+
+                    @using (Html.BeginForm("Add", "Cart", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="productID"
+                               value="@product.ProductID" />
+
+                        <button type="submit"
+                                class="btn btn-success btn-block"
+                                style="margin-top:10px; padding:11px; border-radius:9px;">
+                            <i class="glyphicon glyphicon-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </button>
+                    }
+
+                </div>
+            }
+        }
+        else
+        {
+            <div class="empty-product">
+                <h3>Không tìm thấy sản phẩm</h3>
+                <p>Hiện chưa có sản phẩm phù hợp với tìm kiếm của bạn.</p>
+
+                <a href="@Url.Action("Index", "Home")"
+                   class="detail-button"
+                   style="max-width:180px;margin:20px auto 0;">
+                    Xem tất cả
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
